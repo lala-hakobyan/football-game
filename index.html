@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<meta charset="UTF-8">
+<head>
+<title>Football Game</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<style>
+/* *** Layout *** */
+.row {
+    display: flex;
+	align-items: center;
+}
+
+.col-big {
+   width: 80%;
+}
+
+
+/* *** Text *** */
+.text-style {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.subtitle {
+	font-weight: bold;
+}
+
+
+/* *** Messages *** */	
+.score-message {
+	border: 5px solid green;
+	padding: 10px;
+	display: inline-block;
+}
+
+.status-message {
+	color: green;
+	font-style: italic;
+	padding-left: 15px;
+}	
+
+/* *** Main content *** */
+.goalkeeper {
+	display: inline-block;
+}
+
+.rect-gate {
+	display: inline-block;
+    width: 400px;
+    height: 170px;
+    padding: 10px;
+    border: 5px solid #000;
+    margin-bottom: 50px;
+    position: relative;
+    vertical-align: bottom;
+    bottom: -50px;
+	background-color: green;
+}
+
+.rect-gate .ball {
+	animation: none;
+}
+
+.ball {
+	margin-bottom: 50px;
+	cursor: move;
+	animation: bounce 0.5s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+}
+
+/* Bounce animation */
+@keyframes bounce {
+	from { transform: translate3d(0, 0, 0);}
+	to   { transform: translate3d(0, 100px, 0);}
+}
+</style>
+
+</head>
+<body>
+
+<div class="intro-row text-style">
+	<h1>Բարի գալուստ ֆուտբոլային խաղ</h1>
+	<p class="subtitle">
+	Գլորի՛ր գնդակը դեպի դարպասը խաղը սկսելու համար! 
+	Սեղմի՛ր <a href="#" onclick="startNewGame(event)">այստեղ</a> խաղը վերսկսելու համար!</p>
+</div>
+<div class="row text-style">
+	<div class="col-small"><p><span class="score-message"></span></p></div>
+	<div class="col-big">
+		<p class="status-message"></p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-big">
+		<img src="images/goalkeeper.png" width="300" class="goalkeeper" />
+		<div class="rect-gate" id="gate" ondrop="drop(event);" ondragover="allowDrop(event)"></div>
+	</div>
+	<div class="col-small">
+		<img src="images/ball-medium.png" id="draggableBall" class="ball" draggable="true" ondragstart="drag(event)" width="85" />
+	</div>
+</div>
+
+<script>
+/* Get initial score from the sessionStorage */
+var score = sessionStorage.getItem('myFootballGameScore') || 0;
+showScore();
+
+/* Preload drag image */
+preloadDragImage();
+
+/* Function: Show score 
+   Prints score into the screen
+*/
+function showScore() {
+	document.querySelector('.score-message').textContent ='Դու ունես ' + score + ' միավոր';
+}
+
+/* Function: Preload drag image
+   Preloads the drag image so that it is visible on initial drag action	
+*/
+function preloadDragImage() {
+	var dragImage = document.createElement("img");
+	dragImage.src = "images/ball-small.png";
+}
+
+/* Function: Allow dropping */
+function allowDrop(ev) {
+	ev.preventDefault();
+}
+
+/* Function: Drag
+   Handles drag process	
+ */
+function drag(ev) {
+	ev.dataTransfer.setData("text", ev.target.id);
+    ev.dataTransfer.setDragImage(dragImage, 0, 0);
+	ev.dataTransfer.effectAllowed = "move";
+}
+
+/* Function: Drop 
+   Handles drop process
+   If the ball is dropped into the target, saves the score in sessionStorage & prints message.
+*/
+function drop(ev) {
+	ev.preventDefault();
+	var data = ev.dataTransfer.getData("text");
+	ev.target.appendChild(document.getElementById(data));
+	
+	sessionStorage.setItem('myFootballGameScore', ++score);
+	
+	document.querySelector('.status-message').textContent ='Շնորհավոր! Դու հաղթեցիր Կասիլլասին՝ դու խփեցիր գոլ!';
+	showScore();
+}
+
+/* Function: Start new game
+   Reloads the page to start a new game
+ */
+function startNewGame(ev) {
+	window.location.reload(false);
+}
+</script>
+
+</body>
+</html>
