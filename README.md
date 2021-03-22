@@ -6,4 +6,4 @@ Game Page
 http://my-work.totalh.net/football-game/index.html
 
 Results Page:
-http://my-work.totalh.net/football-game/index.html
+http://my-work.totalh.net/football-game/results.html
